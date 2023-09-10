@@ -7,9 +7,9 @@
 
 const std::string py_path = "/home/esaak/my_folder/CProjects/ComputationalMathematics/py";
 TEST(NumDiffTests, FirstBaseTest){
-    std::uint64_t N = 2;
-    std::array<double, 2> points = {-1, 1};
-    DerivativeCoef<double, 2> answ = calcDerivativeCoef(points);
+    constexpr std::uint64_t N = 2;
+    std::array<double, N> points = {-1, 1};
+    DerivativeCoef<double, N> answ = calcDerivativeCoef(points);
     ASSERT_EQ(answ.centralCoef, 0);
     std::cout<<answ.centralCoef<<"\n";
     ASSERT_EQ(answ.otherCoefs[0], -0.5);
@@ -29,7 +29,7 @@ TEST(NumDiffTests, SecondBaseTest){
 TEST(NumDiffTests, mainBaseTest){
     std::ofstream fileOut;
     fileOut.open(py_path + "/NumDiff/err.txt");
-    constexpr double x = 1;
+    constexpr double x = 1.;
     constexpr std::uint64_t N3 = 3;
     constexpr std::uint64_t N4 = 4;
     constexpr std::uint64_t N5 = 5;
@@ -44,6 +44,8 @@ TEST(NumDiffTests, mainBaseTest){
 
     DerivativeCoef<double, N3> answN3 = calcDerivativeCoef(pointsN3);
     double DN3 = answN3.centralCoef * std::exp(x);
+    std::cout<< answN3.centralCoef<<" ";
+    for(auto&& it: answN3.otherCoefs) std::cout<< it<<" ";
     for(auto&& it : h){
         for(std::uint64_t j = 0; j < pointsN3.size(); j++){
             DN3+=answN3.otherCoefs[j] * std::exp(x + pointsN3[j]*it);
@@ -54,11 +56,12 @@ TEST(NumDiffTests, mainBaseTest){
 
     DerivativeCoef<double, N4> answN4 = calcDerivativeCoef(pointsN4);
     double DN4 = answN4.centralCoef * std::exp(x);
+
     for(auto&& it : h){
         for(std::uint64_t j = 0; j < pointsN4.size(); j++){
             DN4+=answN4.otherCoefs[j] * std::exp(x + pointsN4[j]*it);
         }
-        fileOut<<std::abs(DN4/it - std::exp(x))<<" ";
+        fileOut<<std::abs(DN4/it - std::exp(x)+ std::exp(x)*1e-16/it)<<" ";
     }
     fileOut<<std::endl;
 
@@ -68,7 +71,7 @@ TEST(NumDiffTests, mainBaseTest){
         for(std::uint64_t j = 0; j < pointsN5.size(); j++){
             DN5+=answN5.otherCoefs[j] * std::exp(x + pointsN5[j]*it);
         }
-        fileOut<<std::abs(DN5/it - std::exp(x))<<" ";
+        fileOut<<std::abs(DN5/it - std::exp(x)+ std::exp(x)*1e-16/it)<<" ";
     }
     fileOut<<std::endl;
     fileOut.close();
@@ -108,7 +111,7 @@ TEST(NumDiffTests, mainAdvancedTest){
         for(std::uint64_t j = 0; j < pointsN3.size(); j++){
             DN3+=answN3.otherCoefs[j] * std::exp(x + pointsN3[j]*it);
         }
-        fileOut<<std::abs(DN3/it - std::exp(x))<<" ";
+        fileOut<<std::abs(DN3/std::pow(it, L) - std::exp(x))<<" ";
     }
     fileOut<<std::endl;
 
@@ -118,7 +121,7 @@ TEST(NumDiffTests, mainAdvancedTest){
         for(std::uint64_t j = 0; j < pointsN4.size(); j++){
             DN4+=answN4.otherCoefs[j] * std::exp(x + pointsN4[j]*it);
         }
-        fileOut<<std::abs(DN4/it - std::exp(x))<<" ";
+        fileOut<<std::abs(DN4/std::pow(it, L) - std::exp(x))<<" ";
     }
     fileOut<<std::endl;
 
@@ -128,7 +131,7 @@ TEST(NumDiffTests, mainAdvancedTest){
         for(std::uint64_t j = 0; j < pointsN5.size(); j++){
             DN5+=answN5.otherCoefs[j] * std::exp(x + pointsN5[j]*it);
         }
-        fileOut<<std::abs(DN5/it - std::exp(x))<<" ";
+        fileOut<<std::abs(DN5/std::pow(it, L) - std::exp(x))<<" ";
     }
     fileOut<<std::endl;
     fileOut.close();

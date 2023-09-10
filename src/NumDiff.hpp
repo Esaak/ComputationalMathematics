@@ -8,7 +8,6 @@ struct DerivativeCoef {
     std::array<RealType, N> otherCoefs;
 };
 
-
 constexpr std::uint64_t factorial(std::uint64_t n){
     std::uint64_t answ = 1;
     for(std::uint64_t i = 2; i <= n; i++){
@@ -19,15 +18,15 @@ constexpr std::uint64_t factorial(std::uint64_t n){
 
 template<typename RealType, std::uint64_t N>
 DerivativeCoef<RealType, N> calcDerivativeCoef(const std::array<RealType, N>& points) noexcept{
-    Matrix<RealType> matrix = Matrix<RealType>::zeros(N + 1, N + 1);
-    std::vector<RealType> b(N+1, RealType(0));
+    Matrix<RealType, N + 1> matrix;
+    std::array<RealType, N+1> b{};
     b[1] = RealType(1);
-    std::for_each_n(matrix.begin(), N + 1, [](auto& n){ n = static_cast<RealType>(1);});
+    std::for_each_n(matrix.begin()->begin(), N + 1, [](auto& n){ n = static_cast<RealType>(1);});
     for(std::uint64_t i = 0; i < N; i++){
-        matrix(i + 1,0) = 0;
+        matrix[i+1][0] = 0;
         for(std::uint64_t j = 0; j < N; j++){
-            matrix(i + 1, j + 1) = matrix(i, j + 1) * points[j];
-            matrix(i + 1, j + 1) /= (i + 1);
+            matrix[i + 1][j + 1] = matrix[i][j + 1] * points[j];
+            matrix[i + 1][j + 1] /= (i + 1);
         }
     }
     std::array<RealType, N + 1> gaussAnsw = solvers::Gauss<RealType, N + 1>(matrix, b);
@@ -39,15 +38,15 @@ DerivativeCoef<RealType, N> calcDerivativeCoef(const std::array<RealType, N>& po
 
 template<typename RealType, unsigned int N, unsigned int L>
 DerivativeCoef<RealType, N> calcDerivativeCoef(const std::array<RealType, N>& points) noexcept{
-    Matrix<RealType> matrix = Matrix<RealType>::zeros(N + 1, N + 1);
-    std::vector<RealType> b(N+1, RealType(0));
+    Matrix<RealType, N + 1> matrix;
+    std::array<RealType, N+1> b{};
     b[L] = RealType(1);
-    std::for_each_n(matrix.begin(), N + 1, [](auto& n){ n = static_cast<RealType>(1);});
+    std::for_each_n(matrix.begin()->begin(), N + 1, [](auto& n){ n = static_cast<RealType>(1);});
     for(std::uint64_t i = 0; i < N; i++){
-        matrix(i + 1,0) = 0;
+        matrix[i + 1][0] = 0;
         for(std::uint64_t j = 0; j < N; j++){
-            matrix(i + 1, j + 1) = matrix(i, j + 1) * points[j];
-            matrix(i + 1, j + 1) /= (i + 1);
+            matrix[i + 1][j + 1] = matrix[i][j + 1] * points[j];
+            matrix[i + 1][j + 1] /= (i + 1);
         }
     }
     std::array<RealType, N + 1> gaussAnsw = solvers::Gauss<RealType, N + 1>(matrix, b);
