@@ -200,6 +200,7 @@ TEST(InterpolantTests, baseSecondTest){
     std::ofstream fileOutBaseN3;
     std::ofstream fileOutBaseN4;
     std::ofstream fileOutBaseN5;
+    
     fileOutBaseN3.open(py_path + "/Interpolant/errSecondBaseN3.txt");
     fileOutBaseN4.open(py_path + "/Interpolant/errSecondBaseN4.txt");
     fileOutBaseN5.open(py_path + "/Interpolant/errSecondBaseN5.txt");
@@ -278,4 +279,19 @@ TEST(InterpolantTests, baseSecondTest){
         fileOutBaseN5<<err<<"\n";
     }
 
+}
+
+TEST(InterpolantTests, classTest){
+    std::array<double, 3> pointsN3{0, 1, 2};
+    std::array<double, 3> valuesN3{1, 3, 9};
+    NewtonInterpolator<double, double, 3> interpolator(pointsN3, valuesN3);
+    std::array<double, 3> answ = interpolator.getSplitDifArrs();
+    for(auto&& it: answ) std::cout<<it<<" ";
+}
+TEST(InterpolantTests, classChebTest){
+    std::array<double, 3> pointsN4 = chebNulls<double, 3>(1, 2);
+    /*std::array<double, 3> valuesN3{1, 3, 9};
+    NewtonInterpolator<double, double, 3> interpolator(pointsN3, valuesN3);
+    std::array<double, 3> answ = interpolator.getSplitDifArrs();*/
+    for(auto&& it: pointsN4) std::cout<<it<<" ";
 }

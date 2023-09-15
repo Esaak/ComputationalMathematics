@@ -3,7 +3,7 @@ import numpy as np
 
 
 def grafik():
-    with open('err.txt', 'r') as errFile:
+    with open('errSecond.txt', 'r') as errFile:
         lines = [i for i in errFile.read().split('\n')]
         line1 = [float(i) for i in lines[0].split()]
         line2 = [float(i) for i in lines[1].split()]
@@ -39,7 +39,7 @@ def grafik():
     plt.ylabel(r"log(err)")
 
     plt.legend()
-    plt.savefig("basic.png")
+    plt.savefig("basicSecond.png")
     plt.show()
 
 

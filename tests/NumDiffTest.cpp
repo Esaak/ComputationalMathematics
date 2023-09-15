@@ -28,14 +28,14 @@ TEST(NumDiffTests, SecondBaseTest){
 
 TEST(NumDiffTests, mainBaseTest){
     std::ofstream fileOut;
-    fileOut.open(py_path + "/NumDiff/err.txt");
+    fileOut.open(py_path + "/NumDiff/errSecond.txt");
     constexpr double x = 1.;
     constexpr std::uint64_t N3 = 3;
     constexpr std::uint64_t N4 = 4;
     constexpr std::uint64_t N5 = 5;
-    std::array<double, N3> pointsN3={-1., 1., 2.};
-    std::array<double, N4> pointsN4={-2., -1., 1., 2.};
-    std::array<double, N5> pointsN5={-2., -1., 1., 2., 3.};
+    std::array<double, N3> pointsN3={1., 2., 3.};
+    std::array<double, N4> pointsN4={1., 2., 3., 4.};
+    std::array<double, N5> pointsN5={1., 2., 3., 4., 5.};
     std::array<double, 16> h{};
     h[0]=1;
     for(std::uint64_t i =0; i + 1 < h.size(); i++) {
@@ -44,7 +44,7 @@ TEST(NumDiffTests, mainBaseTest){
 
     DerivativeCoef<double, N3> answN3 = calcDerivativeCoef(pointsN3);
     double DN3 = answN3.centralCoef * std::exp(x);
-    std::cout<< answN3.centralCoef<<" ";
+    std::cout<< std::exp(x);
     for(auto&& it: answN3.otherCoefs) std::cout<< it<<" ";
     for(auto&& it : h){
         for(std::uint64_t j = 0; j < pointsN3.size(); j++){
@@ -61,7 +61,7 @@ TEST(NumDiffTests, mainBaseTest){
         for(std::uint64_t j = 0; j < pointsN4.size(); j++){
             DN4+=answN4.otherCoefs[j] * std::exp(x + pointsN4[j]*it);
         }
-        fileOut<<std::abs(DN4/it - std::exp(x)+ std::exp(x)*1e-16/it)<<" ";
+        fileOut<<std::abs(double(DN4)/it - double(std::exp(x)))<<" ";
     }
     fileOut<<std::endl;
 
@@ -71,7 +71,7 @@ TEST(NumDiffTests, mainBaseTest){
         for(std::uint64_t j = 0; j < pointsN5.size(); j++){
             DN5+=answN5.otherCoefs[j] * std::exp(x + pointsN5[j]*it);
         }
-        fileOut<<std::abs(DN5/it - std::exp(x)+ std::exp(x)*1e-16/it)<<" ";
+        fileOut<<std::abs(DN5/it - std::exp(x))<<" ";
     }
     fileOut<<std::endl;
     fileOut.close();
