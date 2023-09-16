@@ -43,6 +43,7 @@ TEST(InterpolantTests, baseTest){
     fileOutBaseN5.open(py_path + "/Interpolant/errBaseN5.txt");
     double x = 2;
     double nulik = 0;
+    int length = 20;
     std::array<double, 3> pointsN3{};
     std::array<double, 3> valuesN3{};
     std::array<double, 4> pointsN4{};
@@ -51,10 +52,10 @@ TEST(InterpolantTests, baseTest){
     std::array<double, 5> valuesN5{};
     std::array<double, 1000> valuesErr{};
     std::array<double, 1000> pointsErr{};
-    for(int i = 0; i < 6; i++){
+    for(int i = 0; i < length; i++){
         double err = 0;
         double x_i = x / std::pow(x, i);
-        double step_i = x_i / 2;
+        double step_i = x_i / 3;
         double step_err = x_i / 999.;
         for(int j = 0; j < 3; j++){
             pointsN3[j] = j * step_i;
@@ -65,6 +66,7 @@ TEST(InterpolantTests, baseTest){
         }
 
         NewtonInterpolator<double, double, 3> interpolator(pointsN3, valuesN3);
+
         for(int j = 0; j < 1000; j++){
             double interpV = interpolator.interpolate(pointsErr[j]);
             err = std::max(std::abs(std::exp(pointsErr[j]) - interpV), err);
@@ -73,10 +75,10 @@ TEST(InterpolantTests, baseTest){
     }
 
 
-    for(int i = 0; i < 6; i++){
+    for(int i = 0; i < length; i++){
         double err = 0;
         double x_i = x / std::pow(x, i);
-        double step_i = x_i / 3;
+        double step_i = x_i / 4;
         double step_err = x_i / 999.;
         for(int j = 0; j < 4; j++){
             pointsN4[j] = j * step_i;
@@ -95,10 +97,10 @@ TEST(InterpolantTests, baseTest){
     }
 
 
-    for(int i = 0; i < 6; i++){
+    for(int i = 0; i < length; i++){
         double err = 0;
         double x_i = x / std::pow(x, i);
-        double step_i = x_i / 4;
+        double step_i = x_i / 5;
         double step_err = x_i / 999.;
         for(int j = 0; j < 5; j++){
             pointsN5[j] = j * step_i;
@@ -114,6 +116,7 @@ TEST(InterpolantTests, baseTest){
             err = std::max(std::abs(std::exp(pointsErr[j]) - interpV), err);
         }
         fileOutBaseN5<<err<<"\n";
+
     }
 
 }
@@ -126,6 +129,7 @@ TEST(InterpolantTests, baseChebTest){
     fileOutBaseN5.open(py_path + "/Interpolant/errChebBaseN5.txt");
     double x = 2;
     double nulik = 0;
+    int length = 20;
     std::array<double, 3> pointsN3{};
     std::array<double, 3> valuesN3{};
     std::array<double, 4> pointsN4{};
@@ -134,7 +138,7 @@ TEST(InterpolantTests, baseChebTest){
     std::array<double, 5> valuesN5{};
     std::array<double, 1000> pointsErr{};
 
-    for(int i = 0; i < 6; i++){
+    for(int i = 0; i < length; i++){
         double err = 0;
         double x_i = x / std::pow(x, i);
         pointsN3 = chebNulls<double, 3>(double(0), x_i);
@@ -154,7 +158,7 @@ TEST(InterpolantTests, baseChebTest){
         fileOutBaseN3<<err<<"\n";
     }
 
-    for(int i = 0; i < 6; i++){
+    for(int i = 0; i < length; i++){
         double err = 0;
         double x_i = x / std::pow(x, i);
         pointsN4 = chebNulls<double, 4>(double(0), x_i);
@@ -175,7 +179,7 @@ TEST(InterpolantTests, baseChebTest){
     }
 
 
-    for(int i = 0; i < 6; i++){
+    for(int i = 0; i < length; i++){
         double err = 0;
         double x_i = x / std::pow(x, i);
         pointsN5 = chebNulls<double, 5>(double(0), x_i);
@@ -200,10 +204,11 @@ TEST(InterpolantTests, baseSecondTest){
     std::ofstream fileOutBaseN3;
     std::ofstream fileOutBaseN4;
     std::ofstream fileOutBaseN5;
-    
+    std::ofstream fileOutBaseArgsN5;
     fileOutBaseN3.open(py_path + "/Interpolant/errSecondBaseN3.txt");
     fileOutBaseN4.open(py_path + "/Interpolant/errSecondBaseN4.txt");
     fileOutBaseN5.open(py_path + "/Interpolant/errSecondBaseN5.txt");
+    fileOutBaseArgsN5.open(py_path + "/Interpolant/errArgsBaseN5.txt");
     double x = 2;
     double nulik = 0;
     std::array<double, 3> pointsN3{};
@@ -216,6 +221,7 @@ TEST(InterpolantTests, baseSecondTest){
     std::array<double, 1000> pointsErr{};
     for(int i = 0; i < 6; i++){
         double err = 0;
+        double maxVal = 0;
         double x_i = x / std::pow(x, i);
         double step_i = x_i / 4;
         double step_err = x_i / 999.;
@@ -231,13 +237,15 @@ TEST(InterpolantTests, baseSecondTest){
         for(int j = 0; j < 1000; j++){
             double interpV = interpolator.interpolate(pointsErr[j]);
             err = std::max(std::abs(std::exp(pointsErr[j]) - interpV), err);
+            maxVal = std::max(std::exp(pointsErr[j]), maxVal);
         }
-        fileOutBaseN3<<err<<"\n";
+        fileOutBaseN3<<err<<" "<< step_i<<" " << maxVal<<"\n";
     }
 
 
     for(int i = 0; i < 6; i++){
         double err = 0;
+        double maxVal = 0;
         double x_i = x / std::pow(x, i);
         double step_i = x_i / 5;
         double step_err = x_i / 999.;
@@ -253,13 +261,16 @@ TEST(InterpolantTests, baseSecondTest){
         for(int j = 0; j < 1000; j++){
             double interpV = interpolator.interpolate(pointsErr[j]);
             err = std::max(std::abs(std::exp(pointsErr[j]) - interpV), err);
+            maxVal = std::max(std::exp(pointsErr[j]), maxVal);
+
         }
-        fileOutBaseN4<<err<<"\n";
+        fileOutBaseN4<<err<<" "<< step_i<<" " << maxVal<<"\n";
     }
 
 
     for(int i = 0; i < 6; i++){
         double err = 0;
+        double maxVal = 0;
         double x_i = x / std::pow(x, i);
         double step_i = x_i / 6;
         double step_err = x_i / 999.;
@@ -275,8 +286,10 @@ TEST(InterpolantTests, baseSecondTest){
         for(int j = 0; j < 1000; j++){
             double interpV = interpolator.interpolate(pointsErr[j]);
             err = std::max(std::abs(std::exp(pointsErr[j]) - interpV), err);
+            maxVal = std::max(std::exp(pointsErr[j]), maxVal);
+
         }
-        fileOutBaseN5<<err<<"\n";
+        fileOutBaseN5<<err<<" "<< step_i<<" " << maxVal<<"\n";
     }
 
 }

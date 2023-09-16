@@ -25,10 +25,10 @@ public:
         }
     }
     yType interpolate(const xType& x) const noexcept{
-        yType D = 0;
-        for(int64_t i = int64_t(N) - 1; i >= 0;  i--){
-            D += splitDif[i];
-            D *=(x - points[i]);
+        int64_t n = N - 1;
+        yType D = *splitDif.end();
+        for(int64_t i = 1; i < N;  i++){
+            D = splitDif[n - i] + (x - points[n - i]) * D;
         }
         return D;
     }
