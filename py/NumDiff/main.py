@@ -79,9 +79,9 @@ def grafik2():
              color = 'blue', label=f'N = 4, Коэффициент наклона = {coef2[0]}')
     plt.plot(np.log10(h), np.log10(line3), linestyle='dashed', marker='o', markerfacecolor='red',
              color = 'red', label=f'N = 5, Коэффициент наклона = {coef3[0]}')
-    plt.plot(np.log10(h[:-4]), coef1[0] * np.log10(h[:-4]), label = 'polyfit N = 3', color = 'green')
-    plt.plot(np.log10(h[:-6]), coef2[0] * np.log10(h[:-6]), label = 'polyfit N = 4', color = 'blue')
-    plt.plot(np.log10(h[:-8]), coef3[0] * np.log10(h[:-8]), label = 'polyfit N = 5', color = 'red')
+    plt.plot(np.log10(h[:-4]), coef1[0] * np.log10(h[:-4])+ coef1[1], label = 'polyfit N = 3', color = 'green')
+    plt.plot(np.log10(h[:-6]), coef2[0] * np.log10(h[:-6]) + coef2[1], label = 'polyfit N = 4', color = 'blue')
+    plt.plot(np.log10(h[:-8]), coef3[0] * np.log10(h[:-8]) + coef3[1], label = 'polyfit N = 5', color = 'red')
     plt.xlabel("log(step)")
     plt.ylabel(r"log(err)")
     plt.title("Advanced")

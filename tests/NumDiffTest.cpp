@@ -106,7 +106,7 @@ TEST(NumDiffTests, mainAdvancedTest){
     for(std::uint64_t i =0; i + 1 < h.size(); i++) {
         h[i + 1] = h[i] * 0.5;
     }
-
+    for(auto&& it:h) std::cout<<it<<"\n";
     DerivativeCoef<double, N3> answN3 = calcDerivativeCoef<double, N3, L>(pointsN3);
     for(auto&& it : h){
         double DN3 = answN3.centralCoef * std::exp(x);
@@ -137,4 +137,20 @@ TEST(NumDiffTests, mainAdvancedTest){
     }
     fileOut<<std::endl;
     fileOut.close();
+}
+
+TEST(NumDiffTests, dopQuestionTest){
+    constexpr double x = 1;
+    constexpr std::uint64_t N3 = 3;
+    std::array<double, N3> pointsN3={1., 2., 3.};
+    double epsilon = 2.22044604925031308e-16;
+    double h_opt = std::pow(4*epsilon/3., 0.25);
+    DerivativeCoef<double, N3> answN3 = calcDerivativeCoef<double, N3>(pointsN3);
+    double DN3 = answN3.centralCoef * std::exp(x);
+    for(std::uint64_t j = 0; j < pointsN3.size(); j++){
+        DN3+=answN3.otherCoefs[j] * std::exp(x + pointsN3[j]*h_opt);
+    }
+    std::cout<<h_opt<<" "<<std::abs(DN3/h_opt - std::exp(x));
+
+
 }
