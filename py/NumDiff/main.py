@@ -12,12 +12,14 @@ def grafik():
         h = []
         h.append(1.)
         for i in range(15):
-            h.append(h[-1] * 0.1)
+            h.append(h[-1] * 0.5)
     h = np.array(h, dtype=float)
     line1 = np.array(line1, dtype=float)
     line2 = np.array(line2, dtype=float)
     line3 = np.array(line3, dtype=float)
-
+    coef1 = np.polyfit(np.log10(h[:-4]), np.log10(line1[:-4]), 1)
+    coef2 = np.polyfit(np.log10(h[:-6]), np.log10(line2[:-6]), 1)
+    coef3 = np.polyfit(np.log10(h[:-8]), np.log10(line3[:-8]), 1)
     plt.figure(figsize=(12, 7))
     plt.minorticks_on()
     plt.grid(
@@ -28,16 +30,16 @@ def grafik():
         linestyle='--'
     )
 
-    plt.plot(abs(np.log10(h)), np.log10(line1), linestyle='dashed', marker='o', markerfacecolor='green',
-             label=f'N = 3, {abs(np.log10(line1[4]) - np.log10(line1[3])) / (abs(np.log10(h[4])) - abs(np.log10(h[3])))}')
-    plt.plot(abs(np.log10(h)), np.log10(line2), linestyle='dashed', marker='o', markerfacecolor='blue',
-             label=f'N = 4, {abs(np.log10(line2[1]) - np.log10(line2[0])) / (abs(np.log10(h[1])) - abs(np.log10(h[0])))}')
-    plt.plot(abs(np.log10(h)), np.log10(line3), linestyle='dashed', marker='o', markerfacecolor='red',
-             label=f'N = 5, {abs(np.log10(line3[1]) - np.log10(line3[0])) / abs(np.log10(h[1]) - np.log10(h[0]))}')
+    plt.plot(np.log10(h), np.log10(line1), linestyle='dashed', marker='o', markerfacecolor='green',
+             label=f'N = 3, Коэффициент наклона = {coef1[0]}')
+    plt.plot(np.log10(h), np.log10(line2), linestyle='dashed', marker='o', markerfacecolor='blue',
+             label=f'N = 4, Коэффициент наклона = {coef2[0]}')
+    plt.plot(np.log10(h), np.log10(line3), linestyle='dashed', marker='o', markerfacecolor='red',
+             label=f'N = 5, Коэффициент наклона = {coef3[0]}')
 
-    plt.xlabel("|log(step)|")
+    plt.xlabel("log(step)")
     plt.ylabel(r"log(err)")
-
+    plt.title("Base")
     plt.legend()
     plt.savefig("basicSecond.png")
     plt.show()
@@ -53,12 +55,14 @@ def grafik2():
         h = []
         h.append(1.)
         for i in range(15):
-            h.append(h[-1] * 0.1)
+            h.append(h[-1] * 0.5)
     h = np.array(h, dtype=float)
     line1 = np.array(line1, dtype=float)
     line2 = np.array(line2, dtype=float)
     line3 = np.array(line3, dtype=float)
-
+    coef1 = np.polyfit(np.log10(h[:-4]), np.log10(line1[:-4]), 1)
+    coef2 = np.polyfit(np.log10(h[:-6]), np.log10(line2[:-6]), 1)
+    coef3 = np.polyfit(np.log10(h[:-8]), np.log10(line3[:-8]), 1)
     plt.figure(figsize=(12, 7))
     plt.minorticks_on()
     plt.grid(
@@ -69,20 +73,35 @@ def grafik2():
         linestyle='--'
     )
 
-    plt.plot(abs(np.log10(h)), np.log10(line1), linestyle='dashed', marker='o', markerfacecolor='green',
-             label=f'N = 3, {abs(np.log10(line1[4]) - np.log10(line1[3])) / (abs(np.log10(h[4])) - abs(np.log10(h[3])))}')
-    plt.plot(abs(np.log10(h)), np.log10(line2), linestyle='dashed', marker='o', markerfacecolor='blue',
-             label=f'N = 4, {abs(np.log10(line2[4]) - np.log10(line2[3])) / (abs(np.log10(h[4])) - abs(np.log10(h[3])))}')
-    plt.plot(abs(np.log10(h)), np.log10(line3), linestyle='dashed', marker='o', markerfacecolor='red',
-             label=f'N = 5, {abs(np.log10(line3[4]) - np.log10(line3[3])) / abs(np.log10(h[4]) - np.log10(h[3]))}')
-
-    plt.xlabel("|log(step)|")
+    plt.plot((np.log10(h)), np.log10(line1), linestyle='dashed', marker='o', markerfacecolor='green',
+             color = 'green', label=f'N = 3, Коэффициент наклона = {coef1[0]}')
+    plt.plot(np.log10(h), np.log10(line2), linestyle='dashed', marker='o', markerfacecolor='blue',
+             color = 'blue', label=f'N = 4, Коэффициент наклона = {coef2[0]}')
+    plt.plot(np.log10(h), np.log10(line3), linestyle='dashed', marker='o', markerfacecolor='red',
+             color = 'red', label=f'N = 5, Коэффициент наклона = {coef3[0]}')
+    plt.plot(np.log10(h[:-4]), coef1[0] * np.log10(h[:-4]), label = 'polyfit N = 3', color = 'green')
+    plt.plot(np.log10(h[:-6]), coef2[0] * np.log10(h[:-6]), label = 'polyfit N = 4', color = 'blue')
+    plt.plot(np.log10(h[:-8]), coef3[0] * np.log10(h[:-8]), label = 'polyfit N = 5', color = 'red')
+    plt.xlabel("log(step)")
     plt.ylabel(r"log(err)")
-
+    plt.title("Advanced")
     plt.legend()
     plt.savefig("advanced.png")
     plt.show()
 
+def multiiplyMatrix():
+    a = np.array([[1.2, 4.4, 2, 6],
+         [4, 11, 0, 87],
+         [3, 10, 9, 5.6],
+         [2.1, 1.1, 3, 1.3]])
+    b = np.array([1.2, 2.1, 1, 5.6])
+    print(np.dot(np.linalg.inv(a), b))
+    a1 = np.array([[1, 1, 1, 1],
+                   [0, 1, 2, 3],
+                   [0, 0.5, 2, 4.5],
+                   [0, 1/6., 4/3., 4.5]])
+    b1 = np.array([0, 1., 0, 0.])
+    print(np.dot(np.linalg.inv(a1), b1))
 
 if __name__ == '__main__':
-    grafik()
+    grafik2()

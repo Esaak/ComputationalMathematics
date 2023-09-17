@@ -95,9 +95,9 @@ def grafikCheb():
         which='minor',
         linestyle='--'
     )
-    coef1 = np.polyfit(np.log(h), np.log(line1), 1)
-    coef2 = np.polyfit(np.log(h), np.log(line2), 1)
-    coef3 = np.polyfit(np.log(h), np.log(line3), 1)
+    coef1 = np.polyfit(np.log(h[:-4]), np.log(line1[:-4]), 1)
+    coef2 = np.polyfit(np.log(h[:-8]), np.log(line2[:-8]), 1)
+    coef3 = np.polyfit(np.log(h[:-11]), np.log(line3[:-11]), 1)
     plt.plot(np.log(h), np.log(line1), linestyle='dashed', marker='o', markerfacecolor='green',
              label=f'N = 3,  Коэффициент наклона = {coef1[0]}')
     plt.plot(np.log(h), np.log(line2), linestyle='dashed', marker='o', markerfacecolor='blue',
@@ -138,9 +138,9 @@ def grafikBase():
         which='minor',
         linestyle='--'
     )
-    coef1 = np.polyfit(np.log10(h), np.log10(line1), 1)
-    coef2 = np.polyfit(np.log10(h), np.log10(line2), 1)
-    coef3 = np.polyfit(np.log10(h), np.log10(line3), 1)
+    coef1 = np.polyfit(np.log10(h[:-4]), np.log10(line1[:-4]), 1)
+    coef2 = np.polyfit(np.log10(h[:-8]), np.log10(line2[:-8]), 1)
+    coef3 = np.polyfit(np.log10(h[:-11]), np.log10(line3[:-11]), 1)
     plt.plot(np.log10(h), np.log10(line1), linestyle='dashed', marker='o', markerfacecolor='green',
              label=f'N = 3,  Коэффициент наклона = {coef1[0]}')
     plt.plot(np.log10(h), np.log10(line2), linestyle='dashed', marker='o', markerfacecolor='blue',
@@ -160,4 +160,4 @@ def grafikBase():
 
 
 if __name__ == '__main__':
-
+    grafikCheb()

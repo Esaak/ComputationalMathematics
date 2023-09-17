@@ -29,3 +29,18 @@ TEST(SolversTests, GaussTest){
     }
     std::cout<<std::endl;
 }
+
+TEST(SolversTests, GaussDifTest){
+    std::array<double, 4>b{1.2, 2.1, 1., 5.6};
+    Matrix<double, 4> SimpleMatrix = {1.2, 4.4, 2., 6.,
+                                      4., 11., 0., 87,
+                                      3., 10., 9., 5.6,
+                                      2.1, 1.1, 3., 1.3};
+    std::array<double, 4>SimpleAnsw = Gauss<double, 4>(SimpleMatrix, b);
+    std::cout<<"Simple test: ";
+    for(auto&& it:SimpleAnsw){
+        std::cout<<it<<" ";
+
+    }
+    std::cout<<std::endl;
+}

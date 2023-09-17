@@ -8,7 +8,7 @@
 #include <array>
 #include<cstdint>
 
-template<typename xType, typename yType, uint32_t N>
+template<typename xType, typename yType, std::uint32_t N>
 class NewtonInterpolator {
     std::array<yType, N> splitDif;
     std::array<xType, N> points;
@@ -25,9 +25,9 @@ public:
         }
     }
     yType interpolate(const xType& x) const noexcept{
-        int64_t n = N - 1;
-        yType D = *splitDif.end();
-        for(int64_t i = 1; i < N;  i++){
+        constexpr std::int64_t n = N - 1;
+        yType D = splitDif.back();
+        for(std::int64_t i = 1; i < N;  i++){
             D = splitDif[n - i] + (x - points[n - i]) * D;
         }
         return D;
@@ -38,6 +38,7 @@ public:
     std::array<yType, N> getSplitDifArrs() const{
         return splitDif;
     }
+
 };
 
 
