@@ -8,7 +8,7 @@
 const std::string py_path = "/home/esaak/my_folder/CProjects/ComputationalMathematics/py";
 TEST(NumDiffTests, FirstBaseTest){
     constexpr std::uint64_t N = 2;
-    std::array<double, N> points = {-1, 1};
+    std::array<double, N> points = {-2, 3};
     DerivativeCoef<double, N> answ = calcDerivativeCoef(points);
     ASSERT_EQ(answ.centralCoef, 0);
     std::cout<<answ.centralCoef<<"\n";
