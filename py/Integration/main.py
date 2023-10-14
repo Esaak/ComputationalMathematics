@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def grafik(x, y, k, filename):
+def grafik(x, y, k, filename, title):
     # i = 0
     # for j in range(3, len(x)):
     #     coef1 = np.polyfit(np.log(x[0:j]), np.log(y[0:j]), 1)
@@ -22,9 +22,9 @@ def grafik(x, y, k, filename):
         which='minor',
         linestyle='--'
     )
-    plt.plot(np.log(x[0:k]), coef1[0] * np.log(x[0:k]) +coef1[1],lw = 4 )
-    plt.plot(np.log(x), np.log(y), linestyle='dashed', marker='o', markerfacecolor='green',
-             label=f'N = 3, Коэффициент наклона = {coef1[0]}')
+    plt.plot(np.log(x[0:k]), coef1[0] * np.log(x[0:k]) +coef1[1],lw = 4, color = 'green', label = "polyfit")
+    plt.plot(np.log(x), np.log(y), linestyle='dashed', marker='o', markerfacecolor='green', color = 'green',
+             label=f'Коэффициент наклона = {coef1[0]}')
 
     # plt.loglog(h, line1, linestyle='dashed', marker='o', markerfacecolor='green',
     #          label=f'N = 3, Коэффициент наклона = {coef1[0]}')
@@ -36,7 +36,7 @@ def grafik(x, y, k, filename):
     # plt.ylim([0, 1])
     plt.xlabel("log(step)")
     plt.ylabel(r"log(err)")
-    # plt.title('Равномерные узлы')
+    plt.title(title)
     plt.legend()
     plt.savefig(f"{filename.split('.')[0]}.png")
     plt.show()
@@ -51,11 +51,13 @@ def readData(filename):
 if __name__ == '__main__':
     filename1 = "errN3.txt"
     filename2 = "errN5.txt"
+    title1 = "Лабораторная работа: 'Интегрирование'. Квадратура Гаусса с 3 узлами"
+    title2 = "Лабораторная работа: 'Интегрирование'. Квадратура Гаусса с 5 узлами"
     data1 = readData(filename1)
     data2 = readData(filename2)
     h = []
     h.append(16.)
     for i in range(len(data1) - 1):
         h.append(h[-1] * 0.5)
-    grafik(h, np.array(data1, dtype=float), 9,  filename1)
-    grafik(h, np.array(data2, dtype=float), 5, filename2)
+    grafik(h, np.array(data1, dtype=float), 9,  filename1, title1)
+    grafik(h, np.array(data2, dtype=float), 5, filename2, title2)

@@ -30,16 +30,18 @@ def grafik():
         linestyle='--'
     )
 
-    plt.plot(np.log10(h), np.log10(line1), linestyle='dashed', marker='o', markerfacecolor='green',
+    plt.plot(np.log10(h), np.log10(line1), linestyle='dashed', marker='o', markerfacecolor='green',color='green',
              label=f'N = 3, Коэффициент наклона = {coef1[0]}')
-    plt.plot(np.log10(h), np.log10(line2), linestyle='dashed', marker='o', markerfacecolor='blue',
+    plt.plot(np.log10(h), np.log10(line2), linestyle='dashed', marker='o', markerfacecolor='blue',color='blue',
              label=f'N = 4, Коэффициент наклона = {coef2[0]}')
-    plt.plot(np.log10(h), np.log10(line3), linestyle='dashed', marker='o', markerfacecolor='red',
+    plt.plot(np.log10(h), np.log10(line3), linestyle='dashed', marker='o', markerfacecolor='red', color='red',
              label=f'N = 5, Коэффициент наклона = {coef3[0]}')
-
-    plt.xlabel("log(step)")
-    plt.ylabel(r"log(err)")
-    plt.title("Base")
+    plt.plot(np.log10(h[:-4]), coef1[0] * np.log10(h[:-4]) + coef1[1], label='polyfit N = 3', color='green')
+    plt.plot(np.log10(h[:-6]), coef2[0] * np.log10(h[:-6]) + coef2[1], label='polyfit N = 4', color='blue')
+    plt.plot(np.log10(h[:-8]), coef3[0] * np.log10(h[:-8]) + coef3[1], label='polyfit N = 5', color='red')
+    plt.xlabel(r"$\log(step)$")
+    plt.ylabel(r"$\log(err)$")
+    plt.title("Лабораторная работа: 'Численное дифференцирование'. Базовый уровень")
     plt.legend()
     plt.savefig("basicSecond.png")
     plt.show()
@@ -82,9 +84,9 @@ def grafik2():
     plt.plot(np.log10(h[:-4]), coef1[0] * np.log10(h[:-4])+ coef1[1], label = 'polyfit N = 3', color = 'green')
     plt.plot(np.log10(h[:-6]), coef2[0] * np.log10(h[:-6]) + coef2[1], label = 'polyfit N = 4', color = 'blue')
     plt.plot(np.log10(h[:-8]), coef3[0] * np.log10(h[:-8]) + coef3[1], label = 'polyfit N = 5', color = 'red')
-    plt.xlabel("log(step)")
-    plt.ylabel(r"log(err)")
-    plt.title("Advanced")
+    plt.xlabel(r"$\log(step)$")
+    plt.ylabel(r"$\log(err)$")
+    plt.title("Лабораторная работа: 'Численное дифференцирование'. Повышенный уровень")
     plt.legend()
     plt.savefig("advanced.png")
     plt.show()
@@ -104,4 +106,4 @@ def multiiplyMatrix():
     print(np.dot(np.linalg.inv(a1), b1))
 
 if __name__ == '__main__':
-    grafik2()
+    grafik()

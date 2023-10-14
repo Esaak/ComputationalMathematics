@@ -95,20 +95,25 @@ def grafikCheb():
         which='minor',
         linestyle='--'
     )
-    coef1 = np.polyfit(np.log(h[:-4]), np.log(line1[:-4]), 1)
-    coef2 = np.polyfit(np.log(h[:-8]), np.log(line2[:-8]), 1)
-    coef3 = np.polyfit(np.log(h[:-11]), np.log(line3[:-11]), 1)
-    plt.plot(np.log(h), np.log(line1), linestyle='dashed', marker='o', markerfacecolor='green',
+    coef1 = np.polyfit(np.log10(h[:-4]), np.log10(line1[:-4]), 1)
+    coef2 = np.polyfit(np.log10(h[:-8]), np.log10(line2[:-8]), 1)
+    coef3 = np.polyfit(np.log10(h[:-11]), np.log10(line3[:-11]), 1)
+    plt.plot(np.log10(h), np.log10(line1), linestyle='dashed', marker='o', markerfacecolor='green', color="green",
              label=f'N = 3,  Коэффициент наклона = {coef1[0]}')
-    plt.plot(np.log(h), np.log(line2), linestyle='dashed', marker='o', markerfacecolor='blue',
+    plt.plot(np.log10(h), np.log10(line2), linestyle='dashed', marker='o', markerfacecolor='blue', color="blue",
              label=f'N = 4, Коэффициент наклона = {coef2[0]}')
-    plt.plot(np.log(h),np.log(line3), linestyle='dashed', marker='o', markerfacecolor='red',
+
+    plt.plot(np.log10(h), np.log10(line3), linestyle='dashed', marker='o', markerfacecolor='red', color="red",
              label=f'N = 5, Коэффициент наклона = {coef3[0]}')
+    plt.plot(np.log10(h[:-4]), np.log10(h[:-4]) * coef1[0] + coef1[1], color="green", label="polyfit N = 3")
+    plt.plot(np.log10(h[:-8]), np.log10(h[:-8]) * coef2[0] + coef2[1], color="blue", label="polyfit N = 4")
+    plt.plot(np.log10(h[:-11]), np.log10(h[:-11]) * coef3[0] + coef3[1], color="red", label="polyfit N = 5")
+
     # plt.xlim([0,2])
     # plt.ylim([0,1])
-    plt.xlabel("length")
-    plt.ylabel(r"err")
-    plt.title('Чебышевские узлы')
+    plt.xlabel(r"$\log(length)")
+    plt.ylabel(r"$\log(err)$")
+    plt.title("Лабораторная работа: 'Интерполянт'. Чебышевские узлы")
     plt.legend()
     plt.savefig("basicChebLogLog.png")
     plt.show()
@@ -141,17 +146,22 @@ def grafikBase():
     coef1 = np.polyfit(np.log10(h[:-4]), np.log10(line1[:-4]), 1)
     coef2 = np.polyfit(np.log10(h[:-8]), np.log10(line2[:-8]), 1)
     coef3 = np.polyfit(np.log10(h[:-11]), np.log10(line3[:-11]), 1)
-    plt.plot(np.log10(h), np.log10(line1), linestyle='dashed', marker='o', markerfacecolor='green',
+    plt.plot(np.log10(h), np.log10(line1), linestyle='dashed', marker='o', markerfacecolor='green', color = "green",
              label=f'N = 3,  Коэффициент наклона = {coef1[0]}')
-    plt.plot(np.log10(h), np.log10(line2), linestyle='dashed', marker='o', markerfacecolor='blue',
+    plt.plot(np.log10(h), np.log10(line2), linestyle='dashed', marker='o', markerfacecolor='blue', color = "blue",
              label=f'N = 4, Коэффициент наклона = {coef2[0]}')
-    plt.plot(np.log10(h),np.log10(line3), linestyle='dashed', marker='o', markerfacecolor='red',
+
+    plt.plot(np.log10(h),np.log10(line3), linestyle='dashed', marker='o', markerfacecolor='red', color = "red",
              label=f'N = 5, Коэффициент наклона = {coef3[0]}')
+    plt.plot(np.log10(h[:-4]), np.log10(h[:-4])*coef1[0] + coef1[1],color = "green", label ="polyfit N = 3")
+    plt.plot(np.log10(h[:-8]), np.log10(h[:-8])*coef2[0] + coef2[1],color = "blue", label ="polyfit N = 4")
+    plt.plot(np.log10(h[:-11]), np.log10(h[:-11])*coef3[0] + coef3[1],color = "red", label ="polyfit N = 5")
+
     # plt.xlim([0,2])
     # plt.ylim([0,1])
-    plt.xlabel("length")
-    plt.ylabel(r"err")
-    plt.title('Равномерные узлы')
+    plt.xlabel(r"$\log(length)")
+    plt.ylabel(r"$\log(err)$")
+    plt.title("Лабораторная работа: 'Интерполянт'. Равномерные узлы")
     plt.legend()
     plt.savefig("basicLogLog.png")
     plt.show()

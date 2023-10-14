@@ -22,10 +22,10 @@ def grafik(x, y, k, filename):
         which='minor',
         linestyle='--'
     )
-    plt.plot(np.log(x[0:k]), coef1[0] * np.log(x[0:k]) +coef1[1],lw = 4 )
-    plt.plot(np.log(x), np.log(y), linestyle='dashed', marker='o', markerfacecolor='green',
-             label=f'N = 3, Коэффициент наклона = {coef1[0]}')
 
+    plt.plot(np.log(x), np.log(y), linestyle='dashed', marker='o', markerfacecolor='green', color = 'green',
+             label=f'N = 3, Коэффициент наклона = {coef1[0]}')
+    plt.plot(np.log(x[0:k]), coef1[0] * np.log(x[0:k]) + coef1[1], lw=4, color = 'green', label = 'green')
     # plt.loglog(h, line1, linestyle='dashed', marker='o', markerfacecolor='green',
     #          label=f'N = 3, Коэффициент наклона = {coef1[0]}')
     # plt.loglog(h, line2, linestyle='dashed', marker='o', markerfacecolor='green',
@@ -34,9 +34,9 @@ def grafik(x, y, k, filename):
     #          label=f'N = 5, Коэффициент наклона = {coef3[0]}')
     # plt.xlim([-4, 2])
     # plt.ylim([0, 1])
-    plt.xlabel("log(step)")
+    plt.xlabel("log(num of nodes)")
     plt.ylabel(r"log(err)")
-    # plt.title('Равномерные узлы')
+    plt.title(f'Лабораторная работа spline. $\log(err)(\log(nodes))$')
     plt.legend()
     plt.savefig(f"{filename.split('.')[0]}.png")
     plt.show()
