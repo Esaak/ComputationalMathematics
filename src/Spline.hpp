@@ -189,19 +189,20 @@ CubicSpline<xType, yType, N>::CubicSpline(const std::array<xType, N + 1> &points
         h_2 = h[i+1] + h[i];
         u[i + 1] = (values[i+2] - values[i + 1])/h[i+1];
         column[i] = 6 * (u[i + 1] - u[i])/h_2;
-        matrix[i] = {h[i]/h_2, diagEl, h[i+1]/h_2};
+        auto tmp = h[i]/h_2;
+        matrix[i] = {tmp, diagEl, 1 - tmp};
     }
-    h.back() = points.back() - *(points.end() -2);
-    u.back() = (values.back() - *(values.end() - 2))/h.back();
-    column.back() = 6 * (u.back() - *(u.end()-2))/(points.back() - *(points.end() - 3));
-    matrix.back() = {h[N - 2]/(points[N] - points[N-2]), diagEl, 0};
+    h.back() = points.back() - points[column.size()];
+    u.back() = (values.back() - values[column.size()])/h.back();
+    column.back() = 6 * (u.back() - u[N - 2])/(points.back() - points[N - 2]);
+    matrix.back() = {h[N - 2]/(points.back() - points[N-2]), diagEl, 0};
     auto answC = solve(matrix, column);
     for(std::size_t i = 0; i != answC.size(); i++){
         splines[i+1].c = answC[i];
-        splines[i+1].b = (answC[i] + splines[i].c/yType(2)) * h[i + 1]/yType(3) + u[i];
-        splines[i+1].d = (answC[i] - splines[i].c) / h[i + 1];
+        splines[i+1].b = (answC[i] + splines[i].c/yType(2)) * h[i]/yType(3) + u[i];
+        splines[i+1].d = (answC[i] - splines[i].c) / h[i];
     }
-    splines.back().b = splines[answC.size()].c/yType(6) * h.back() + u[answC.size()];
+    splines.back().b = splines[answC.size()].c/yType(6) * h.back() + u.back();
     splines.back().d = -(splines[answC.size()].c) / h.back();
 
 }

@@ -49,13 +49,14 @@ def readData(filename):
 
 
 if __name__ == '__main__':
-    filename1 = "err.txt"
+    filename1 = "err2.txt"
     data1 = readData(filename1)
     h = []
     h.append(5)
 
     for i in range(len(data1) - 1):
         h.append(h[-1] * 2)
-    print(h)
+    h = np.array(h)
+
     grafik(h, np.array(data1, dtype=float), 6,  filename1)
 
