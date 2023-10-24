@@ -296,3 +296,19 @@ TEST(SplineTests, SecondTest){
     fileOut<<maxx<<"\n";
     fileOut.close();
 }
+
+TEST(SplineTests, IvanTest){
+    constexpr std::size_t N = 4.;
+    std::array<double, N> values5{};
+    std::array<double, N> points5{};
+    double start = 0;
+    double end = 10;
+    auto func = [](auto x){return std::exp(x);};
+    const double dx = (end-start)/4.;
+    for(std::size_t j = 0; j <= 4; j++){
+        points5[j] = double(j) * dx;
+        values5[j] = func(points5[j]);
+    }
+    CubicSpline<double, double, 3> s5{points5, values5};
+    std::cout<<points5[0];
+}

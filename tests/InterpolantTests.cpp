@@ -120,6 +120,7 @@ TEST(InterpolantTests, baseTest){
     }
 
 }
+
 TEST(InterpolantTests, baseChebTest){
     std::ofstream fileOutBaseN3;
     std::ofstream fileOutBaseN4;
