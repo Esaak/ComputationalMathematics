@@ -166,4 +166,6 @@ decltype(auto) integrate(
     return result;
 }
 
+
+
 #endif //COMPMATH_INTEGRATION_HPP
