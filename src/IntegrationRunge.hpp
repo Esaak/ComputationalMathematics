@@ -33,7 +33,7 @@ struct fc{
 template<typename Callable>
 decltype(auto) integrateRunge(
         const Callable &func,
-        auto cf,
+        const auto& cf,
         const typename ArgumentGetter<Callable>::Argument &start,
         const typename ArgumentGetter<Callable>::Argument &end,
         const Dif<typename ArgumentGetter<Callable>::Argument> &eps,
