@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 
 #include <array>
 #include <vector>
@@ -10,12 +11,12 @@ struct DP45{
     using vType = std::array<double, stages>;
     using rType = double;
     static constexpr std::array<vType , stages> table = {{{0., 0., 0., 0., 0., 0., 0.},
-                                                                             {1./5., 0., 0., 0., 0., 0., 0.},
-                                                                             {3./40., 9./40., 0., 0., 0., 0., 0.},
-                                                                             {44./45., -56./15., 32./9.,0., 0., 0., 0.},
-                                                                             {19372./6561., -25360./2187., 64448./6561., -212./729., 0., 0., 0.},
-                                                                             {9017./3168., -355./33., 46732./5247., 49./176., -5103./ 18656., 0., 0.},
-                                                                             {35./384., 0., 500./1113., 125./192., -2187./6784., 11./84., 0.}}};
+                                                          {1./5., 0., 0., 0., 0., 0., 0.},
+                                                          {3./40., 9./40., 0., 0., 0., 0., 0.},
+                                                          {44./45., -56./15., 32./9.,0., 0., 0., 0.},
+                                                          {19372./6561., -25360./2187., 64448./6561., -212./729., 0., 0., 0.},
+                                                          {9017./3168., -355./33., 46732./5247., 49./176., -5103./ 18656., 0., 0.},
+                                                          {35./384., 0., 500./1113., 125./192., -2187./6784., 11./84., 0.}}};
     static constexpr vType cColumn = {0., 1./5., 3./10., 4./5., 8./9., 1., 1.};
     static constexpr vType bString1 = {35./384., 0., 500./1113., 125./192., -2187./6784., 11./84., 0.};
     static constexpr vType bString2 = {5179./57600., 0., 7571./16695., 393./640., -92097./339200., 187./2100., 1./40.};
@@ -60,7 +61,7 @@ public:
                                           stateAndArg.state(0) + 2. * stateAndArg.state(3) - (1 - mu)*(stateAndArg.state(0) + mu)/D1 - mu*(stateAndArg.state(0) - (1-mu))/D2,
                                           stateAndArg.state(3),
                                           stateAndArg.state(2) - 2. * stateAndArg.state(1) - (1 - mu)*stateAndArg.state(2)/D1 - mu * stateAndArg.state(2)/D2
-                                          };
+        };
     }
 };
 
@@ -69,7 +70,9 @@ template<typename Table, typename RHS, typename fType, typename uType>
 std::pair<uType, uType> uzNextStep(const uType &uCurrent, const RHS &rhs, double step) {
     using rType = typename Table::rType;
     std::array<fType, Table::stages> k{};
-    for(auto& it: k) it = uCurrent.state;
+    for(std::size_t i = 0; i < Table::stages; i++){
+
+    }
     k[0] = rhs.calc(uCurrent);
     k[1] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[1], k), uCurrent.arg + step * Table::cColumn[1]});
     k[2] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[2], k), uCurrent.arg + step * Table::cColumn[2]});
@@ -77,6 +80,7 @@ std::pair<uType, uType> uzNextStep(const uType &uCurrent, const RHS &rhs, double
     k[4] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[4], k), uCurrent.arg + step * Table::cColumn[4]});
     k[5] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[5], k), uCurrent.arg + step * Table::cColumn[5]});
     k[6] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[6], k), uCurrent.arg + step * Table::cColumn[6]});
+    k[7] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[7], k), uCurrent.arg + step * Table::cColumn[7]});
     return {{uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::bString1, k), uCurrent.arg + step},
             {uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::bString2, k), uCurrent.arg + step}};
 }

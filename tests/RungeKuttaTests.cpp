@@ -80,7 +80,7 @@ TEST(RungeKuttaTests, mainDPRKTest){
     sc.maxStep = 1e-1;
     sc.initialStep = 1e-4;
     sc.tolerance =1e-5;
-    double endTime = 17.06521656;
+    double endTime = 17.06521656 * 2;
     orbitAhrenstorf::StateAndArg initialState = {{0.994, 0, 0, -2.001585106}, 0.};
     auto result = integrate<DP45, orbitAhrenstorf>(initialState, endTime, sc, orbitAhrenstorf{});
     for(auto& it:result){
