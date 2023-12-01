@@ -15,8 +15,8 @@ def grafikBase(x, y, filename):
         linestyle='--'
     )
 
-    coef1 = np.polyfit(np.log10(x[0]), np.log10(y[0]), 1)
-    coef2 = np.polyfit(np.log10(x[1]), np.log10(y[1]), 1)
+    coef1 = np.polyfit(np.log10(x[0][4:]), np.log10(y[0][4:]), 1)
+    coef2 = np.polyfit(np.log10(x[1][4:]), np.log10(y[1][4:]), 1)
 
     plt.plot(np.log10(x[0]), np.log10(y[0]), linestyle='dashed', marker='o', markerfacecolor='green', color = "green",
              label=f"$y' = t^3,$ \n $y(0) = 0 $, \n k = {np.round(coef1[0][0], 2)} \n")
@@ -48,14 +48,13 @@ if __name__ == '__main__':
     err_2 = np.array(readData(filename2), dtype=float)
 
 
-    x_1 = [5./1e5]
+    x_1 = [1e-3]
     for i in range(len(err_1) - 1):
-        x_1.append(x_1[-1]*2)
-    x_2 = [5./1e5]
+        x_1.append(x_1[-1] + 1e-3)
+    x_2 = [0.001]
     for i in range(len(err_2) - 1):
-        x_2.append(x_2[-1]*2)
+        x_2.append(x_2[-1] + 0.001)
     #print(x_1)
-    #print(err_1)
     #print(err_2)
     err = [err_1, err_2]
     x = [x_1, x_2]

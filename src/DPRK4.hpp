@@ -8,6 +8,7 @@
 struct DP45{
     static constexpr unsigned int stages = 7;
     using vType = std::array<double, stages>;
+    using rType = double;
     static constexpr std::array<vType , stages> table = {{{0., 0., 0., 0., 0., 0., 0.},
                                                                              {1./5., 0., 0., 0., 0., 0., 0.},
                                                                              {3./40., 9./40., 0., 0., 0., 0., 0.},
@@ -62,75 +63,35 @@ public:
                                           };
     }
 };
-/*
-template<typename V1, typename V2>
-V1 vpv(V1 vector1, const V2& vector2){
-    for(std::size_t i = 0; vector1.size(); i++){
-        vector1[i]+=vector2[i];
-    }
-    return vector1;
-}
 
-template<typename kType, typename fieldType>
-kType k2v(fieldType f, kType k){
-    for(auto& it:k){
-        it*=f;
-    }
-    return k;
-}
 
-*/
-template<typename Table, typename Arg>
-Arg dot(const typename Table::vType &column, std::size_t row) {
-    Arg result = Table::table[row][0] * column[0];;
-    for (std::size_t i = 1; i < column.size(); i++) {
-        result += Table::table[row][i] * column[i];
-    }
-    return result;
-}
-
-template<typename Table, typename Arg>
-Arg v2v(const typename Table::vType &bString, const std::array<Arg, Table::stages> &column) {
-    if (column.empty()) throw std::invalid_argument("bad arguments");
-    Arg result = bString[0] * column[0];
-
-    for (std::size_t i = 1; i < column.size(); i++) {
-        result += bString[i] * column[i];
-    }
-    return result;
-}
-
-template<typename Table, typename RHS, typename fType, typename uType, typename rType>
-std::pair<uType, uType> uzNextStep(const uType &uCurrent, const RHS &rhs, rType step) {
+template<typename Table, typename RHS, typename fType, typename uType>
+std::pair<uType, uType> uzNextStep(const uType &uCurrent, const RHS &rhs, double step) {
+    using rType = typename Table::rType;
     std::array<fType, Table::stages> k{};
     k[0] = rhs.calc(uCurrent);
-    k[1] = rhs.calc({uCurrent.state + step * dot<Table, fType>(k, 1), uCurrent.arg + step * Table::cColumn[1]});
-    k[2] = rhs.calc({uCurrent.state + step * dot<Table, fType>(k, 2), uCurrent.arg + step * Table::cColumn[2]});
-    k[3] = rhs.calc({uCurrent.state + step * dot<Table, fType>(k, 3), uCurrent.arg + step * Table::cColumn[3]});
-    k[4] = rhs.calc({uCurrent.state + step * dot<Table, fType>(k, 4), uCurrent.arg + step * Table::cColumn[4]});
-    k[5] = rhs.calc({uCurrent.state + step * dot<Table, fType>(k, 5), uCurrent.arg + step * Table::cColumn[5]});
-    k[6] = rhs.calc({uCurrent.state + step * dot<Table, fType>(k, 6), uCurrent.arg + step * Table::cColumn[6]});
-    k[7] = rhs.calc({uCurrent.state + step * dot<Table, fType>(k, 7), uCurrent.arg + step * Table::cColumn[7]});
-    //std::cout<<std::setprecision(10)<<k[0]<<" "<<k[1]<<" "<<k[2]<<" "<<k[3]<<"\n";
-    return {{uCurrent.state + step * v2v<Table, fType>(Table::bString1, k), uCurrent.arg + step},
-            {uCurrent.state + step * v2v<Table, fType>(Table::bString2, k), uCurrent.arg + step}};
+    k[1] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[1], k), uCurrent.arg + step * Table::cColumn[1]});
+    k[2] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[2], k), uCurrent.arg + step * Table::cColumn[2]});
+    k[3] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[3], k), uCurrent.arg + step * Table::cColumn[3]});
+    k[4] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[4], k), uCurrent.arg + step * Table::cColumn[4]});
+    k[5] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[5], k), uCurrent.arg + step * Table::cColumn[5]});
+    k[6] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[6], k), uCurrent.arg + step * Table::cColumn[6]});
+    k[7] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[7], k), uCurrent.arg + step * Table::cColumn[7]});
+    return {{uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::bString1, k), uCurrent.arg + step},
+            {uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::bString2, k), uCurrent.arg + step}};
 }
 
 template<typename rType, typename uType>
 decltype(auto) hNextStep(const StepControl& stepControl, rType stepCurrent,const std::pair<uType, uType>& uz){
     auto r = std::sqrt((uz.first.state - uz.second.state).dot(uz.first.state - uz.second.state));
-    //std::cout<<"r = "<<uz.second.state <<"\n";
     auto s = std::pow(stepControl.tolerance*stepCurrent/(2.*r),1./5);
     auto hOpt = s*stepCurrent;
     if(hOpt < stepControl.minStep) {
-        //std::cout<<stepControl.minStep<<"\n";
         return stepControl.minStep;
     }
     if(hOpt > stepControl.maxStep) {
-        //std::cout<<stepControl.maxStep<<"\n";
         return stepControl.maxStep;
     }
-    //std::cout<< hOpt<<"\n";
     return hOpt;
 }
 
@@ -155,13 +116,13 @@ std::vector<typename RHS::StateAndArg> integrate(
 
 
     while (timeCurrent + stepCurrent < endTime){
-        uzCurrent = uzNextStep<Table, RHS, ftype, utype, double>(uzCurrent.first, rhs, stepCurrent); //then delete
+        uzCurrent = uzNextStep<Table, RHS, ftype, utype>(uzCurrent.first, rhs, stepCurrent); //then delete
         timeCurrent +=stepCurrent;
-        stepCurrent = hNextStep<double, utype>(stepControl, stepCurrent, uzCurrent);
+        stepCurrent = hNextStep<typename Table::rType, utype>(stepControl, stepCurrent, uzCurrent);
         uVector.push_back(uzCurrent.first);
     }
     if((endTime - timeCurrent) > stepControl.minStep){
-        uzCurrent = uzNextStep<Table, RHS, ftype, utype, double>(uzCurrent.first, rhs, endTime - timeCurrent); //then delete
+        uzCurrent = uzNextStep<Table, RHS, ftype, utype>(uzCurrent.first, rhs, endTime - timeCurrent); //then delete
         uVector.push_back(uzCurrent.first);
     }
     return uVector;

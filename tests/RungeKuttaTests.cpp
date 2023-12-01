@@ -19,15 +19,26 @@ TEST(RungeKuttaTests, mainFirstFunctionTest){
     double endTime = 5.;
     std::ofstream errFile;
     errFile.open(py_path + "/RK4/err.txt");
-
+    auto func = [](auto x){return std::pow(x, 10)/10.;};
+    double step = 1e-3;
     for(std::size_t i = 0; i <= 10; i++){
-        double z = 1e5/std::pow(2, i);
-        //double z = 5;
+        step+=1e-3;
+        int stepNumber = endTime/step;
+        std::vector<double> resultTrue;
+        double r = 0;
+        for(std::size_t j = 0; j <= stepNumber; j++){
+            resultTrue.push_back(func(step * j));
+        }
+        resultTrue.push_back(func(endTime));
         auto result = integrate<RK4Table, firstTask>(firstTask::StateAndArg{firstTask::State {0.}, 0},
-                                                     endTime, endTime/z, firstTask{}, errFile);
-
-        ASSERT_NEAR(156.25,result.state(0),0.1 );
-        ASSERT_NEAR(5,result.arg,0.1 );
+                                                     endTime, step, firstTask{});
+        for(std::size_t j = 0; j < result.size(); j++){
+            //std::cout<<j<<" "<<std::abs(result[j].state(0) - resultTrue[j])<<"\n";
+            r = std::max(r, std::abs((result[j].state(0) - resultTrue[j])));
+        }
+        errFile<<r<<"\n";
+        ASSERT_NEAR(976562.5,result.back().state(0),0.1 )<<result.back().state(0)<<"\n";
+        ASSERT_NEAR(5,result.back().arg,0.1 );
     }
 }
 
@@ -35,24 +46,41 @@ TEST(RungeKuttaTests, mainSecondTest){
     double endTime = 5.;
     std::ofstream errFile;
     errFile.open(py_path + "/RK4/err2.txt");
-
+    auto func = [](auto x){return std::sin(x);};
+    double step = 1e-3;
     for(std::size_t i = 0; i <= 10; i++){
-        double z = 1e5/std::pow(2, i);
+        step+=1e-3;
+        int stepNumber = endTime/step;
+        std::vector<double> resultTrue;
+        double r = 0;
+        for(std::size_t j = 0; j <= stepNumber; j++){
+            resultTrue.push_back(func(step * j));
+        }
+
+        resultTrue.push_back(func(endTime));
+
         auto result = integrate<RK4Table, secondTask>(secondTask::StateAndArg{secondTask::State {0., 1.}, 0.},
-                                                     endTime, endTime/z, secondTask{}, errFile);
-        ASSERT_NEAR(std::sin(5),result.state(0), 1)<<result.state(0)<<" "<<result.state(1)<<"\n";
-        ASSERT_NEAR(5,result.arg,0.1 );
+                                                      endTime, step, secondTask{});
+
+        for(std::size_t j = 0; j < result.size(); j++){
+            //std::cout<<j<<" "<<std::abs(result[j].state(0) - resultTrue[j])<<"\n";
+            r = std::max(r, std::abs((result[j].state(0) - resultTrue[j])));
+        }
+        errFile<<r<<"\n";
+        ASSERT_NEAR(std::sin(5.),result.back().state(0),0.1 )<<result.back().state(0)<<"\n";
+        ASSERT_NEAR(5,result.back().arg,0.1 );
     }
 }
+
 TEST(RungeKuttaTests, mainDPRKTest){
     std::ofstream errFile;
     errFile.open(py_path + "/RK4/errDP.txt");
     StepControl sc{};
-    sc.minStep = 1e-4;
-    sc.maxStep = 1;
-    sc.initialStep = 0.01;
+    sc.minStep = 1e-6;
+    sc.maxStep = 1e-1;
+    sc.initialStep = 1e-4;
     sc.tolerance =1e-5;
-    double endTime = 100. * 17.06521656;
+    double endTime = 17.06521656;
     orbitAhrenstorf::StateAndArg initialState = {{0.994, 0, 0, -2.001585106}, 0.};
     auto result = integrate<DP45, orbitAhrenstorf>(initialState, endTime, sc, orbitAhrenstorf{});
     for(auto& it:result){

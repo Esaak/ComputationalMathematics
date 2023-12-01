@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def grafikBase(x, y, filename):
-    plt.figure(figsize=(12, 7))
+    plt.figure(figsize=(12, 12))
     # plt.minorticks_on()
     # plt.grid(
     #     which='major'
@@ -11,15 +12,22 @@ def grafikBase(x, y, filename):
     #     which='minor',
     #     linestyle='--'
     # )
-    plt.plot(x, y)
-    plt.axis('off')
+    plt.plot(np.array(x, dtype=float), np.array(y, dtype=float))
+    max_x = np.max(np.abs(np.array(x, dtype=float)))
+    max_y = np.max(np.abs(np.array(y, dtype=float)))
+    x_ticks = np.linspace(-max_x, max_x, 10)
+    print(max_x)
+    print(max_y)
+    y_ticks = np.linspace(-max_y, max_y, 10)
+    plt.xticks(x_ticks)
+    plt.yticks(y_ticks)
     plt.xlabel(r"$x$")
     plt.ylabel(r"$y$")
     plt.title("Лабораторная работа: 'DPRK4'. Advanced")
     # plt.legend()
     plt.savefig(f"{filename.split('.')[0]}.png")
     print(1)
-    # plt.show()
+    plt.show()
 
 
 def readData(filename):

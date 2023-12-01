@@ -11,9 +11,11 @@
 double keplerSolver(double ecc, double meanAnomaly, unsigned int maxIter, double tol, auto& out_func = nullptr){
     double answer_current = 0.;
     double answer_next = meanAnomaly;
+    auto func = [&meanAnomaly, &ecc](auto&& E){return E + ecc*std::sin(E) - meanAnomaly;};
+    auto dfunc = [&ecc](auto&& E){return 1 + ecc*std::cos(E);};
     for(auto i = 0; i < maxIter; i++){
         answer_current = answer_next;
-        answer_next = meanAnomaly + ecc * std::sin(answer_current);
+        answer_next = answer_current - func(answer_current)/dfunc(answer_current);
 
         out_func(std::abs(answer_current - answer_next));
 

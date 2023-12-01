@@ -31,6 +31,7 @@ def grafikBase(x, y, filename):
              label=f'ecc = 0.8, k = {np.round(coef4[0][0], 1)}')
     plt.plot(x[0], x[0]*coef1[0] + coef1[1],color = "green", label ="polyfit ecc = 0.1")
     plt.plot(x[1], x[1]*coef2[0] + coef2[1],color = "blue", label ="polyfit ecc = 0.1")
+
     plt.plot(x[2], x[2]*coef3[0] + coef3[1],color = "red", label ="polyfit ecc = 0.1")
     plt.plot(x[3], x[3]*coef4[0] + coef4[1],color = "black", label ="polyfit ecc = 0.1")
 
