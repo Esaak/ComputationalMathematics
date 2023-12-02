@@ -71,14 +71,14 @@ std::pair<uType, uType> uzNextStep(const uType &uCurrent, const RHS &rhs, double
     std::array<fType, Table::stages> k{};
     for(auto& it: k) it = uCurrent.state;
     k[0] = rhs.calc(uCurrent);
-    k[1] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[1], k), uCurrent.arg + step * Table::cColumn[1]});
-    k[2] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[2], k), uCurrent.arg + step * Table::cColumn[2]});
-    k[3] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[3], k), uCurrent.arg + step * Table::cColumn[3]});
-    k[4] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[4], k), uCurrent.arg + step * Table::cColumn[4]});
-    k[5] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[5], k), uCurrent.arg + step * Table::cColumn[5]});
-    k[6] = rhs.calc({uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::table[6], k), uCurrent.arg + step * Table::cColumn[6]});
-    return {{uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::bString1, k), uCurrent.arg + step},
-            {uCurrent.state + step * v2v<rType, fType, Table::stages>(Table::bString2, k), uCurrent.arg + step}};
+    k[1] = rhs.calc({uCurrent.state + step * dot<rType, fType, Table::stages>(Table::table[1], k), uCurrent.arg + step * Table::cColumn[1]});
+    k[2] = rhs.calc({uCurrent.state + step * dot<rType, fType, Table::stages>(Table::table[2], k), uCurrent.arg + step * Table::cColumn[2]});
+    k[3] = rhs.calc({uCurrent.state + step * dot<rType, fType, Table::stages>(Table::table[3], k), uCurrent.arg + step * Table::cColumn[3]});
+    k[4] = rhs.calc({uCurrent.state + step * dot<rType, fType, Table::stages>(Table::table[4], k), uCurrent.arg + step * Table::cColumn[4]});
+    k[5] = rhs.calc({uCurrent.state + step * dot<rType, fType, Table::stages>(Table::table[5], k), uCurrent.arg + step * Table::cColumn[5]});
+    k[6] = rhs.calc({uCurrent.state + step * dot<rType, fType, Table::stages>(Table::table[6], k), uCurrent.arg + step * Table::cColumn[6]});
+    return {{uCurrent.state + step * dot<rType, fType, Table::stages>(Table::bString1, k), uCurrent.arg + step},
+            {uCurrent.state + step * dot<rType, fType, Table::stages>(Table::bString2, k), uCurrent.arg + step}};
 }
 
 template<typename rType, typename uType>

@@ -25,7 +25,7 @@ namespace diny{
 template<typename Y, typename Callable, Y (*formula)(Y, Y, Callable&)>
 struct fc{
     std::size_t p;
-    Y operator()(Y start, Y end, Callable& func){
+    Y operator()(Y start, Y end, Callable& func) const{
         return formula(start, end, func);
     }
 };

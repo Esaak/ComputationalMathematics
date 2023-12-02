@@ -21,7 +21,7 @@ TEST(IntegrationRungeTests, assertTest){
     constexpr double acc = 0;
     std::size_t p = 4;
     fc<double, double(double), func1<double>> cf;
-    cf.p;
+    cf.p = p;
     std::cout<< integrateRunge<double(double)>(std::sin, cf, start, end, it, acc)<<"\n";
 
 }

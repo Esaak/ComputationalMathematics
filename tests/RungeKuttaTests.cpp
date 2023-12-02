@@ -49,7 +49,7 @@ TEST(RungeKuttaTests, mainSecondTest){
     auto func = [](auto x){return std::sin(x);};
     double step = 1e-3;
     for(std::size_t i = 0; i <= 10; i++){
-        step+=1e-3;
+        //step+=1e-3;
         int stepNumber = endTime/step;
         std::vector<double> resultTrue;
         double r = 0;
