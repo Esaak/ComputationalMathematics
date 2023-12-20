@@ -88,3 +88,29 @@ TEST(RungeKuttaTests, mainDPRKTest){
     }
 }
 
+TEST(RungeKuttaTests, mainSuperTask){
+    std::ofstream errFile;
+    std::ofstream lMov;
+    errFile.open(py_path + "/RK4/coordsSuperTaskI30NotCirc.txt");
+    lMov.open(py_path + "/RK4/coordsSuperTaskLMovNotCirc.txt");
+    double step = 10.;
+    double endTime = 1e5;
+
+    double r = 2 * 6378136.;
+    double v = std::sqrt(superTask::mu/r);
+    auto result = integrate<RK4Table, superTask>(superTask::StateAndArg{superTask::State {0., r, 0.,
+                                                                                          v * std::cos(M_PI/6.), 0., -v*std::sin(M_PI/6.) }, 0.},
+                                                  endTime, step, superTask{});
+    for(auto& it : result){
+        for(auto& i : it.state){
+            errFile<<i<<" ";
+
+        }
+        auto rvCross =  Eigen::Vector3d(it.state(0), it.state(1), it.state(2)).cross(Eigen::Vector3d(it.state(3), it.state(4), it.state(5)));
+        lMov<<std::sqrt(rvCross.dot(rvCross))<<"\n";
+        errFile<<"\n";
+    }
+
+}
+
+

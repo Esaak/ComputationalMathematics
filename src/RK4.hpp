@@ -78,6 +78,43 @@ public:
     }
 };
 
+class superTask {
+public:
+
+    static constexpr unsigned int dim = 6;  // размерность задачи
+
+    using Argument = double;  // тип аргумента, тип t
+
+    using State = Eigen::Vector<double, dim>;  // состояние
+
+    static constexpr double mu = 3.986 * 1e14;
+    static constexpr double Rev = 6378136;
+    static constexpr double J2 =1.082 * 1e20;
+    static constexpr double epsilon =3 * mu * Rev * Rev * J2 / 2.;
+
+    struct StateAndArg {
+        State state;
+        Argument arg;
+    };
+
+    /*** Вычисляет правую часть ДУ - функцию f***/
+    Eigen::Vector<double, dim> calc(const StateAndArg &stateAndArg) const {
+        double r = std::sqrt(stateAndArg.state(0)*stateAndArg.state(0) + stateAndArg.state(1)*stateAndArg.state(1) +
+                stateAndArg.state(2)*stateAndArg.state(2));
+        double r2 = r*r;
+        double r3 = r2*r;
+        double r5 = r2*r3;
+        //std::cout<<mu - epsilon/r5 * (5 * stateAndArg.state(2)*stateAndArg.state(2)/r2 - 1.)<<'\n';
+//        std::cout<<r<<"\t"<<std::sqrt(stateAndArg.state(3)*stateAndArg.state(3) + stateAndArg.state(4)*stateAndArg.state(4) +
+//                                      stateAndArg.state(5)*stateAndArg.state(5))<<"\n";
+        return Eigen::Vector<double, dim>{stateAndArg.state(3), stateAndArg.state(4), stateAndArg.state(5),
+                                          -stateAndArg.state(0)/r3 * (mu - epsilon/r5 * (5 * stateAndArg.state(2)*stateAndArg.state(2)/r2 - 1.)),
+                                          -stateAndArg.state(1)/r3 * (mu - epsilon/r5 * (5 * stateAndArg.state(2)*stateAndArg.state(2)/r2 - 1.)),
+                                          -stateAndArg.state(2)/r3 * (mu - epsilon/r5 * (5 * stateAndArg.state(2)*stateAndArg.state(2)/r2 - 3.))};
+    }
+};
+
+
 //Сигнатура для метода интегрирования:
 template<typename Table, typename RHS>
 // таблица бутчера и класс правой части f
